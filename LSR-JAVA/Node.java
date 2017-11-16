@@ -22,12 +22,39 @@ public class Node {
 
  /* students to write the following two routines, and maybe some others */
  void rtinit(int nodename, int[] initial_lkcost) { 
+   
+ // initialize necessary data structures
  
  lkcost = new int[4]; // initalizes the lkcost variable
  lkcost = initial_lkcost.clone(); // clones initial_lkcost into the new lkcost array
  this.nodename = nodename; // sets the node name to the inputted node name
  this.costs = new int[4][2]; // initializes the cost array in the node
  this.graph = new int[4][4]; // initializes the adjacency matrix graph
+ 
+ // update lkcost and graph?? I think that's the next step
+ 
+ 
+ 
+ 
+ 
+ 
+ //
+ 
+ 
+ // send link costs to all other nodes
+ 
+ for (int i = 0; i < 4; i++) {
+  
+   if (lkcost[i] != INFINITY && i != nodename) { // if the node is reachable (a neighbor) and it's not this node
+     
+     // yo @ben. the last field in the packet below is a seqNum, but i'm not sure why we use it. lmk if you know. i just put in a placeholder of 0 rn
+     
+     Packet packetSend = new Packet(this.nodename, i, this.nodename, lkcost, 0); // creates a packet to send to other nodes
+     NetworkSimulator.tolayer2(packetSend); // sends packet over layer 2
+     
+   }
+   
+ }
  
  }    
 
