@@ -96,6 +96,12 @@ public class Node {
     
     // update the cost table (not sure how to properly do this for costs[i][1])
     
+    for (int i = 0; i < 4; i++) {
+      if (outputTable[i][0] < costs[i][0]) {
+       costs[i][0] = outputTable[i][0]; 
+      }
+    }
+    
     // forwards packet to all other nodes that have not received this packet yet
     
     for (int i = 0; i < 4; i++) {
