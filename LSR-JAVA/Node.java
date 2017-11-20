@@ -27,27 +27,40 @@ public class Node {
  
  lkcost = new int[4]; // initalizes the lkcost variable
  lkcost = initial_lkcost.clone(); // clones initial_lkcost into the new lkcost array
+ 
  this.nodename = nodename; // sets the node name to the inputted node name
  this.costs = new int[4][2]; // initializes the cost array in the node
  this.graph = new int[4][4]; // initializes the adjacency matrix graph
  
- // update lkcost and graph?? I think that's the next step
+ // initialize the forwarding the graph
+ 
+ for (int i = 0; i < 4; i++) {
+   for (int j = 0; j < 4; j++) {
+     if (i == nodename || j == nodename) {
+       graph[i][j] = lkcost[j]; // initializes to the lkcost of the node to node j
+     }
+   }
+ }
+ 
+ // initialize the forwarding costs table
+ 
+ costs[0] = lkcost.clone();
+ 
+ for (int i = 0; i <4; i++) {
+   if (costs[i][0] != INFINITY) { // the node is reachable
+     costs[i][1] = i;
+   }
+   else {
+    costs[i][1] = -1; 
+   }
+ }
  
  
- 
- 
- 
- 
- //
- 
- 
- // send link costs to all other nodes
+ // send link costs to all neighboring nodes
  
  for (int i = 0; i < 4; i++) {
   
    if (lkcost[i] != INFINITY && i != nodename) { // if the node is reachable (a neighbor) and it's not this node
-     
-     // yo @ben. the last field in the packet below is a seqNum, but i'm not sure why we use it. lmk if you know. i just put in a placeholder of 0 rn
      
      Packet packetSend = new Packet(this.nodename, i, this.nodename, lkcost, 0); // creates a packet to send to other nodes
      NetworkSimulator.tolayer2(packetSend); // sends packet over layer 2
