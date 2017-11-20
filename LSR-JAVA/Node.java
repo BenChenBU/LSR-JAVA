@@ -76,6 +76,8 @@ public class Node {
   
   void rtupdate(Packet rcvdpkt) { 
     
+    
+    int[][] outputTable;
     int[] minArray = rcvdpkt.mincost; // stores the mincost array for the incoming packet
     int source = rcvdpkt.sourceid; // stores the source ID of the node
     
@@ -90,27 +92,49 @@ public class Node {
     
     // runs dijkstra's algorithm on the graph
     
+    outputTable = dijkstra(graph, nodename);
     
-    // forwards packet to all other nodes that have not received the packet yet
+    // update the cost table (not sure how to properly do this for costs[i][1])
+    
+    // forwards packet to all other nodes that have not received this packet yet
+    
+    for (int i = 0; i < 4; i++) {
+      // if the node is reachable (a neighbor) but not reachable from the received packet node and it's not this node, send packet
+      
+      if (lkcost[i] != INFINITY && minArray[i] == INFINITY && i != nodename) {
+        NetworkSimulator.tolayer2(rcvdpkt); // sends packet over layer 2 
+      } 
+    }
+  }
+  
+  // implementation of dijkstra's (not really lol) algorithm
+  
+  int[][] dijkstra(int graph[][], int src) {
+    
+    int[][] output = new int[4][2]; // copies the current cost table
+    int newCost; // variable to store new low cost
+    int neighborCost;
     
     for (int i = 0; i < 4; i++) {
       
-      // if the node is reachable (a neighbor) but not reachable from the received packet node and it's not this node, send packet
-      
-      if (lkcost[i] != INFINITY && minArray[i] == INFINITY && i != nodename) { 
+      if (graph[src][i] != INFINITY && i != src) { // finds neighbors of src
         
-        NetworkSimulator.tolayer2(rcvdpkt); // sends packet over layer 2
-        
+        for (int j = 0; j < 4; j++) {
+          neighborCost = graph[i][j]; // cost to get to node j from node i, which is a neighbor of src
+          newCost = graph[src][i] + neighborCost; // cost to get to node j through node i from the src node
+          
+          if (newCost < graph[src][j]) { // if going through node i to get to j is shorter than the direct path to j, update the output table
+            output[j][0] = newCost;
+            output[j][1] = i;
+          }
+          else{
+            continue; 
+          }
+        }
       }
-      
     }
     
-    
-  }
-  
-  public static int[][] dijkstra(int graph[][], int src) {
-    
-    return null;
+    return output;
     
   }
   
