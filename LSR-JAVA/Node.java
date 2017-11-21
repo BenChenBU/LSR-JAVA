@@ -83,6 +83,7 @@ public class Node {
         Packet packetSend = new Packet(this.nodename, i, this.nodename, lkcost, seqNum); // creates a packet to send to other nodes
         NetworkSimulator.tolayer2(packetSend); // sends packet over layer 2
         seqNum++;
+        NetworkSimulator.packetsSent++;
         
       }
       
@@ -171,9 +172,6 @@ public class Node {
           }
           
           
-          //costs[i][1] = outputTable[i][1];
-          
-          
         }
       }
       
@@ -191,6 +189,7 @@ public class Node {
           Packet packetSend = new Packet(this.nodename, i, name, minArray, seqNumRcv);
           NetworkSimulator.tolayer2(packetSend); // sends packet over layer 2
           System.out.println("Node " + this.nodename + " is delivering a packet originally from " + name + " to " + i + ".");
+          NetworkSimulator.packetsSent++;
         } 
       }
       
@@ -285,6 +284,7 @@ public class Node {
         Packet packetSend = new Packet(this.nodename, i, this.nodename, lkcost, seqNum); // creates a packet to send to other nodes
         NetworkSimulator.tolayer2(packetSend); // sends packet over layer 2
         seqNum++;
+        NetworkSimulator.packetsSent++;
       }
     }
     

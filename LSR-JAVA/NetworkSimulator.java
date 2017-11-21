@@ -23,6 +23,8 @@ public class NetworkSimulator {
     private Node n2;
     private Node n3;
     
+    public static int packetsSent;
+    
     // Connection costs between routers used for sanity checks
     private static int[][] connectcosts = new int[4][4];
     
@@ -176,6 +178,7 @@ public class NetworkSimulator {
                     System.exit(0);
             }
         }
+        System.out.println("Total Packets Sent: " + packetsSent);
         System.out.println("Simulator terminated at time " + getTime());
     }
     
