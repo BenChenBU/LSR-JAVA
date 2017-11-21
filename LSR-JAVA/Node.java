@@ -48,6 +48,7 @@ public class Node {
     // initialize the forwarding costs table
     
     costs[0] = lkcost.clone();
+    System.out.println("this is a test: " + costs[0][0] + costs[0][1] + costs[0][2]);
     
     for (int i = 0; i <4; i++) {
       if (costs[i][0] != INFINITY) { // the node is reachable
@@ -57,6 +58,9 @@ public class Node {
         costs[i][1] = -1; 
       }
     }
+    
+    System.out.println("Graph and Costs for Node " + nodename + " have been initialized.");
+    printdt();
     
     
     // send link costs to all neighboring nodes
@@ -102,6 +106,9 @@ public class Node {
       }
     }
     
+    System.out.println("Node " + nodename + " has been properly updated.");
+    printdt();
+    
     // forwards packet to all other nodes that have not received this packet yet
     
     for (int i = 0; i < 4; i++) {
@@ -145,7 +152,23 @@ public class Node {
   }
   
   /* called when cost from the node to linkid changes from current value to newcost*/
-  void linkhandler(int linkid, int newcost) { }  
+  void linkhandler(int linkid, int newcost) { 
+  
+    lkcost[linkid] = newcost; // update array
+    
+    // send link costs to all neighboring nodes
+    
+    for (int i = 0; i < 4; i++) {
+      
+      if (lkcost[i] != INFINITY && i != nodename) { // if the node is reachable (a neighbor) and it's not this node
+        
+        Packet packetSend = new Packet(this.nodename, i, this.nodename, lkcost, 0); // creates a packet to send to other nodes
+        NetworkSimulator.tolayer2(packetSend); // sends packet over layer 2
+      }
+    }
+    
+  
+  }  
   
   /* Prints the current costs to reaching other nodes in the network */
   void printdt() {
