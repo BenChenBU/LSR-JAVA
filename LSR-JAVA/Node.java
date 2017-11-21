@@ -1,4 +1,6 @@
 import java.io.*;
+import java.util.Arrays;
+import java.util.ArrayList;
 
 /**
  * This is the class that students need to implement. The code skeleton is provided.
@@ -16,6 +18,13 @@ public class Node {
    [i][1] is the next hop towards the destination node */
   
   int[][] graph;    /*Adjacency metric for the network, where (i,j) is cost to go from node i to j */
+  Boolean flag = false;
+  
+  ArrayList<Integer> seqNums0 = new ArrayList<Integer>();
+  ArrayList<Integer> seqNums1 = new ArrayList<Integer>();
+  ArrayList<Integer> seqNums2 = new ArrayList<Integer>();
+  ArrayList<Integer> seqNums3 = new ArrayList<Integer>();
+  int seqNum;
   
   /* Class constructor */
   public Node() { }
@@ -47,8 +56,10 @@ public class Node {
     
     // initialize the forwarding costs table
     
-    costs[0] = lkcost.clone();
-    System.out.println("this is a test: " + costs[0][0] + costs[0][1] + costs[0][2]);
+    for (int i = 0; i < 4; i++) {
+     costs[i][0] = lkcost[i];
+     System.out.println("Updated costs with lkcost. Just updated: " + costs[i][0]);
+    }
     
     for (int i = 0; i <4; i++) {
       if (costs[i][0] != INFINITY) { // the node is reachable
@@ -69,8 +80,9 @@ public class Node {
       
       if (lkcost[i] != INFINITY && i != nodename) { // if the node is reachable (a neighbor) and it's not this node
         
-        Packet packetSend = new Packet(this.nodename, i, this.nodename, lkcost, 0); // creates a packet to send to other nodes
+        Packet packetSend = new Packet(this.nodename, i, this.nodename, lkcost, seqNum); // creates a packet to send to other nodes
         NetworkSimulator.tolayer2(packetSend); // sends packet over layer 2
+        seqNum++;
         
       }
       
@@ -78,12 +90,43 @@ public class Node {
     
   }    
   
-  void rtupdate(Packet rcvdpkt) { 
+  void rtupdate(Packet rcvdpkt) {
     
+    int sourceID = rcvdpkt.sourceid;
+    int seqNumRcv = rcvdpkt.seqNo; 
+    
+    if (sourceID == 0) {
+      if (!seqNums0.contains(seqNumRcv)) {
+       seqNums0.add(seqNumRcv); 
+       flag = true;
+      }
+    }
+    if (sourceID == 1) {
+      if (!seqNums1.contains(seqNumRcv)) {
+       seqNums1.add(seqNumRcv); 
+       flag = true;
+      }
+    }
+    if (sourceID == 2) {
+      if (!seqNums2.contains(seqNumRcv)) {
+       seqNums2.add(seqNumRcv); 
+       flag = true;
+      }
+    }
+    if (sourceID == 3) {
+      if (!seqNums3.contains(seqNumRcv)) {
+       seqNums3.add(seqNumRcv); 
+       flag = true;
+      }
+    }
+    
+    if (flag == true) {
     
     int[][] outputTable;
     int[] minArray = rcvdpkt.mincost; // stores the mincost array for the incoming packet
     int source = rcvdpkt.sourceid; // stores the source ID of the node
+    int seqNum = rcvdpkt.seqNo; // seqnum of incoming packet
+    int name = rcvdpkt.nodename; // name of the node who sent this packet
     
     // updates our graph with adjacency information from the incoming packet
     
@@ -102,22 +145,32 @@ public class Node {
     
     for (int i = 0; i < 4; i++) {
       if (outputTable[i][0] < costs[i][0]) {
-       costs[i][0] = outputTable[i][0]; 
+       costs[i][0] = outputTable[i][0];
+       
+      
       }
     }
     
-    System.out.println("Node " + nodename + " has been properly updated.");
+    System.out.println("Node " + nodename + "'s cost table has been properly updated.");
     printdt();
     
     // forwards packet to all other nodes that have not received this packet yet
+    
+    
     
     for (int i = 0; i < 4; i++) {
       // if the node is reachable (a neighbor) but not reachable from the received packet node and it's not this node, send packet
       
       if (lkcost[i] != INFINITY && minArray[i] == INFINITY && i != nodename) {
-        NetworkSimulator.tolayer2(rcvdpkt); // sends packet over layer 2 
+        Packet packetSend = new Packet(this.nodename, i, name, minArray, seqNumRcv);
+        NetworkSimulator.tolayer2(packetSend); // sends packet over layer 2
+        System.out.println("Node " + this.nodename + " is delivering a packet originally from " + name + " to " + i + ".");
       } 
     }
+    
+    flag = false;
+    
+  }
   }
   
   // implementation of dijkstra's (not really lol) algorithm
@@ -125,12 +178,20 @@ public class Node {
   int[][] dijkstra(int graph[][], int src) {
     
     int[][] output = new int[4][2]; // copies the current cost table
+    
+    for (int i = 0; i < 4; i++) {
+      for (int j = 0; j < 2; j++) {
+       output[i][j] = INFINITY; 
+      }
+    }
+    
+    
     int newCost; // variable to store new low cost
     int neighborCost;
     
     for (int i = 0; i < 4; i++) {
       
-      if (graph[src][i] != INFINITY && i != src) { // finds neighbors of src
+      if (graph[src][i] != INFINITY && i != src) { // traverses through neighbors of src
         
         for (int j = 0; j < 4; j++) {
           neighborCost = graph[i][j]; // cost to get to node j from node i, which is a neighbor of src
