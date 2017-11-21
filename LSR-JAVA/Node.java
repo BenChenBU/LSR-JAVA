@@ -190,12 +190,17 @@ public class Node {
     int neighborCost;
     
     for (int i = 0; i < 4; i++) {
+      System.out.println("This is i: " + i);
       
       if (graph[src][i] != INFINITY && i != src) { // only traverses through neighbors of src
         
         for (int j = 0; j < 4; j++) {
+          System.out.println("This is j: " + j);
           neighborCost = graph[i][j]; // cost to get to node j from node i, which is a neighbor of src
+          System.out.println("This is cost from " + i + " to " + j + " (neighborCost): " + neighborCost);
           newCost = graph[src][i] + neighborCost; // cost to get to node j through node i from the src node
+          System.out.println("This is cost to get to node " + j + " through " + i +  " from " + src + ": " + newCost);
+          System.out.println("This is graph[src][j]: " + graph[src][j]);
           
           if (newCost < graph[src][j]) { // if going through node i to get to j is shorter than the direct path to j, update the output table
             output[j][0] = newCost;
@@ -208,6 +213,7 @@ public class Node {
       }
     }
     
+    System.out.println("This is dijkstra's output: " + Arrays.deepToString(output));
     return output;
     
   }
