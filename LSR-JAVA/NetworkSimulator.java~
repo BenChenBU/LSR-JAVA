@@ -9,7 +9,7 @@ public class NetworkSimulator {
     static final int LINK_CHANGE = 10;
     
     // link changes flag
-    private int LINKCHANGES = 1;
+    private int LINKCHANGES = 0;
     
     // Variables and data structures
     private static EventList eventList;
@@ -95,10 +95,10 @@ public class NetworkSimulator {
          * Used for performing some sanity checks in the tolayer2() method
          ***************************/
         connectcosts = new int[4][4];
-        connectcosts[0][0]=0;    connectcosts[0][1]=1;  connectcosts[0][2]=1; connectcosts[0][3]=9999;
-        connectcosts[1][0]=1;    connectcosts[1][1]=0;  connectcosts[1][2]=10; connectcosts[1][3]=7;
-        connectcosts[2][0]=1;    connectcosts[2][1]=10;  connectcosts[2][2]=0; connectcosts[2][3]=2;
-        connectcosts[3][0]=9999;   connectcosts[3][1]=7;  connectcosts[3][2]=2; connectcosts[3][3]=0;
+        connectcosts[0][0]=0;  		connectcosts[0][1]=1;  connectcosts[0][2]=1; connectcosts[0][3]=9999;
+        connectcosts[1][0]=1;  		connectcosts[1][1]=0;  connectcosts[1][2]=10; connectcosts[1][3]=7;
+        connectcosts[2][0]=1;  		connectcosts[2][1]=10;  connectcosts[2][2]=0; connectcosts[2][3]=2;
+        connectcosts[3][0]=9999;  	connectcosts[3][1]=7;  connectcosts[3][2]=2; connectcosts[3][3]=0;
         
         /***************************************
          * initialize future link changes
