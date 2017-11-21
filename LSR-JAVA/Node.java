@@ -92,28 +92,28 @@ public class Node {
   
   void rtupdate(Packet rcvdpkt) {
     
-    int sourceID = rcvdpkt.sourceid;
+    int nameOrig = rcvdpkt.nodename;
     int seqNumRcv = rcvdpkt.seqNo; 
     
-    if (sourceID == 0) {
+    if (nameOrig == 0) {
       if (!seqNums0.contains(seqNumRcv)) {
        seqNums0.add(seqNumRcv); 
        flag = true;
       }
     }
-    if (sourceID == 1) {
+    if (nameOrig == 1) {
       if (!seqNums1.contains(seqNumRcv)) {
        seqNums1.add(seqNumRcv); 
        flag = true;
       }
     }
-    if (sourceID == 2) {
+    if (nameOrig == 2) {
       if (!seqNums2.contains(seqNumRcv)) {
        seqNums2.add(seqNumRcv); 
        flag = true;
       }
     }
-    if (sourceID == 3) {
+    if (nameOrig == 3) {
       if (!seqNums3.contains(seqNumRcv)) {
        seqNums3.add(seqNumRcv); 
        flag = true;
@@ -147,7 +147,7 @@ public class Node {
       if (outputTable[i][0] < costs[i][0]) {
        costs[i][0] = outputTable[i][0];
        
-      
+       
       }
     }
     
@@ -191,7 +191,7 @@ public class Node {
     
     for (int i = 0; i < 4; i++) {
       
-      if (graph[src][i] != INFINITY && i != src) { // traverses through neighbors of src
+      if (graph[src][i] != INFINITY && i != src) { // only traverses through neighbors of src
         
         for (int j = 0; j < 4; j++) {
           neighborCost = graph[i][j]; // cost to get to node j from node i, which is a neighbor of src
