@@ -126,14 +126,14 @@ public class Node {
     int[] minArray = rcvdpkt.mincost; // stores the mincost array for the incoming packet
     int source = rcvdpkt.sourceid; // stores the source ID of the node
     int seqNum = rcvdpkt.seqNo; // seqnum of incoming packet
-    int name = rcvdpkt.nodename; // name of the node who sent this packet
+    int name = rcvdpkt.nodename; // name of the node who sent this packet originally
     
     // updates our graph with adjacency information from the incoming packet
     
     for (int i = 0; i < 4; i++) {
       
       if (minArray[i] != INFINITY) { // if the node can reach node i
-        graph[source][i] = minArray[i]; // update our graph with the node's lkcost information
+        graph[name][i] = minArray[i]; // update our graph with the node's lkcost information
       }
     }
     
