@@ -20,11 +20,11 @@ public class Node {
   int[][] graph;    /*Adjacency metric for the network, where (i,j) is cost to go from node i to j */
   Boolean flag = false;
   
-  ArrayList<Integer> seqNums0 = new ArrayList<Integer>();
-  ArrayList<Integer> seqNums1 = new ArrayList<Integer>();
-  ArrayList<Integer> seqNums2 = new ArrayList<Integer>();
-  ArrayList<Integer> seqNums3 = new ArrayList<Integer>();
-  int seqNum;
+  ArrayList<Integer> seqNums0 = new ArrayList<Integer>(); // holds the seqnums received from node 0
+  ArrayList<Integer> seqNums1 = new ArrayList<Integer>(); // holds the seqnums received from node 1
+  ArrayList<Integer> seqNums2 = new ArrayList<Integer>(); // holds the seqnums received from node 2
+  ArrayList<Integer> seqNums3 = new ArrayList<Integer>(); // holds the seqnums received from node 3
+  int seqNum; // running seqnum
   
   /* Class constructor */
   public Node() { }
@@ -150,12 +150,14 @@ public class Node {
       for (int i = 0; i < 4; i++) {
         
         
+        
         if (outputTable[i][0] < costs[i][0]) {
         costs[i][0] = outputTable[i][0];
-        
+        System.out.println(Arrays.deepToString(costs));
         
           int temp = outputTable[i][0] - graph[i][outputTable[i][1]];
           if (graph[outputTable[i][1]][this.nodename] == temp) {
+            System.out.println("this runs");
             costs[i][1] = outputTable[i][1];
           }
           else {
@@ -163,8 +165,11 @@ public class Node {
               int currentVertex = graph[outputTable[i][1]][k];
               if (currentVertex != INFINITY && currentVertex != 0 && k != i) {
                 temp = temp - currentVertex;
+                System.out.println("this runs2");
                 if (graph[k][this.nodename] == temp) {
+                  System.out.println("this runs3. this is k: " + k);
                   costs[i][1] = k;
+                  System.out.println("this is costs: " + costs[i][1] + " with i as " + i);
                   break;
                 }
               }
@@ -225,7 +230,7 @@ public class Node {
       
       for (int j = 0; j < 4; j++) { // loops through the total amount of vertexes we have
         
-        /* Performs five checks 
+        /* Performs five checks: 
          * 1) Vertex to neighbor is not 0 (this means it is ourself)
          * 2) Vertex to neighbor is not infinity (this means it's not a neighbor)
          * 3) Output table is not infinity (this means it can't be  / is not a neighbor)
